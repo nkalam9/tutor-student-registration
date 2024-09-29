@@ -1,0 +1,27 @@
+{
+    "name":"Naresh",
+    "DOB": "26-09-1995",
+    "gender":"M",
+    "userId": "naresh",
+    "tutorPhoto": "test",
+    "email":"naresh@gmail",
+    "password":"naresh123",
+    "location":{
+        "state":"Telangana",
+        "country":"India",
+        "city":"Hyderabad"
+    },
+    "contactDetails":{
+        "emailId":"test@gmail.com",
+        "phoneNo":"9700649764"
+    },
+    "address":{
+        "buldingNo": "65",
+        "floor":"1 st",
+        "streetNo": "9 th cross",
+        "area": "HSR",
+        "landMark": "Temple",
+        "pinCode": "500600"
+    },
+    "teachingSubjects":["CS","ECE"]
+}

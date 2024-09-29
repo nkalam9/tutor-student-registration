@@ -1,7 +1,6 @@
 import {
   Input,
   InputGroup,
-  InputLeftAddon,
   Stack,
   Text,
   Select,
@@ -11,6 +10,73 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+
+// Mock data from JSON files
+const getLocationData = {
+  location: [
+    {
+      _id: "66f789de2041c9e40d2c4d1a",
+      countryStateCity: [
+        {
+          states: [
+            {
+              state: "Andhra Pradesh",
+              cities: ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
+            },
+            {
+              state: "West Bengal",
+              cities: ["Kolkata", "Siliguri", "Asansol"],
+            },
+            {
+              state: "Maharashtra",
+              cities: ["Mumbai", "Pune", "Nagpur"],
+            },
+            {
+              state: "Telangana",
+              cities: ["Hyderabad", "Warangal", "Nizamabad"],
+            },
+            {
+              state: "Uttar Pradesh",
+              cities: ["Lucknow", "Kanpur", "Firozabad"],
+            },
+            {
+              state: "Kerala",
+              cities: ["Thiruvananthapuram", "Kochi", "Kozhikode"],
+            },
+            {
+              state: "Karnataka",
+              cities: ["Bengaluru", "Hubli-Dharwad", "Belagavi"],
+            },
+          ],
+          _id: "66f8d2e77b02a7ba8fdb9e10",
+          country: "India",
+        },
+        {
+          states: [
+            {
+              state: "New York",
+              cities: ["Buffalo", "Rochester", "Yonkers"],
+            },
+            {
+              state: "California",
+              cities: ["Los Angeles", "San Diego", "San Jose"],
+            },
+            {
+              state: "Illinois",
+              cities: ["Chicago", "Aurora", "Rockford"],
+            },
+            {
+              state: "Texas",
+              cities: ["Houston", "San Antonio", "Dallas"],
+            },
+          ],
+          _id: "66f8d2e77b02a7ba8fdb9e11",
+          country: "USA",
+        },
+      ],
+    },
+  ],
+};
 
 const RegistrationForm = () => {
   const initialFormData = {
@@ -45,50 +111,31 @@ const RegistrationForm = () => {
   const [subjects, setSubjects] = useState([]);
 
   useEffect(() => {
-    const mockCountries = [
-      { code: "IN", name: "India" },
-      { code: "US", name: "United States" },
-    ];
-    setCountries(mockCountries);
+    const countriesData = getLocationData.location[0].countryStateCity.map(
+      (country) => country.country
+    );
+    setCountries(countriesData);
 
-    if (formData.country === "India") {
-      const mockStates = [
-        { code: "KA", name: "Karnataka" },
-        { code: "MH", name: "Maharashtra" },
-      ];
-      setStates(mockStates);
-    } else if (formData.country === "United States") {
-      const mockStates = [
-        { code: "CA", name: "California" },
-        { code: "TX", name: "Texas" },
-      ];
-      setStates(mockStates);
-    }
+    const selectedCountry = getLocationData.location[0].countryStateCity.find(
+      (country) => country.country === formData.country
+    );
 
-    if (formData.state === "Karnataka") {
-      const mockCities = [
-        { code: "BLR", name: "Bangalore" },
-        { code: "MYS", name: "Mysore" },
-      ];
-      setCities(mockCities);
-    } else if (formData.state === "Maharashtra") {
-      const mockCities = [
-        { code: "MUM", name: "Mumbai" },
-        { code: "PUN", name: "Pune" },
-      ];
-      setCities(mockCities);
-    } else if (formData.state === "California") {
-      const mockCities = [
-        { code: "LA", name: "Los Angeles" },
-        { code: "SF", name: "San Francisco" },
-      ];
-      setCities(mockCities);
-    } else if (formData.state === "Texas") {
-      const mockCities = [
-        { code: "HOU", name: "Houston" },
-        { code: "DAL", name: "Dallas" },
-      ];
-      setCities(mockCities);
+    if (selectedCountry) {
+      const statesData = selectedCountry.states.map((state) => state.state);
+      setStates(statesData);
+
+      const selectedState = selectedCountry.states.find(
+        (state) => state.state === formData.state
+      );
+
+      if (selectedState) {
+        setCities(selectedState.cities);
+      } else {
+        setCities([]);
+      }
+    } else {
+      setStates([]);
+      setCities([]);
     }
 
     const mockSubjects = [
@@ -225,8 +272,8 @@ const RegistrationForm = () => {
         >
           <option value="">Select Country</option>
           {countries.map((country) => (
-            <option key={country.code} value={country.name}>
-              {country.name}
+            <option key={country} value={country}>
+              {country}
             </option>
           ))}
         </Select>
@@ -242,8 +289,8 @@ const RegistrationForm = () => {
         >
           <option value="">Select State</option>
           {states.map((state) => (
-            <option key={state.code} value={state.name}>
-              {state.name}
+            <option key={state} value={state}>
+              {state}
             </option>
           ))}
         </Select>
@@ -259,8 +306,8 @@ const RegistrationForm = () => {
         >
           <option value="">Select City</option>
           {cities.map((city) => (
-            <option key={city.code} value={city.name}>
-              {city.name}
+            <option key={city} value={city}>
+              {city}
             </option>
           ))}
         </Select>

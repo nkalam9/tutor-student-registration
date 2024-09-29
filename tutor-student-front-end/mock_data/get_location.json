@@ -1,0 +1,223 @@
+{
+    "location": [
+        {
+            "_id": "66f789de2041c9e40d2c4d1a",
+            "countryStateCity": [
+                {
+                    "states": [
+                        {
+                            "state": "Andhra Pradesh",
+                            "cities": [
+                                "Visakhapatnam",
+                                "Vijayawada",
+                                "Guntur",
+                                "Nellore",
+                                "Kurnool",
+                                "Rajahmundry",
+                                "Kakinada",
+                                "Tirupati",
+                                "Anantapur",
+                                "Kadapa"
+                            ]
+                        },
+                        {
+                            "state": "West Bengal",
+                            "cities": [
+                                "Kolkata",
+                                "Siliguri",
+                                "Asansol",
+                                "Raghunathganj",
+                                "Kharagpur",
+                                "Naihati",
+                                "English Bazar",
+                                "Baharampur",
+                                "Hugli-Chinsurah",
+                                "Raiganj",
+                                "Jalpaiguri",
+                                "Santipur",
+                                "Balurghat"
+                            ]
+                        },
+                        {
+                            "state": "Maharashtra",
+                            "cities": [
+                                "Mumbai",
+                                "Pune",
+                                "Nagpur",
+                                "Thane",
+                                "Nashik",
+                                "Kalyan-Dombivali",
+                                "Vasai-Virar",
+                                "Solapur",
+                                "Mira-Bhayandar",
+                                "Bhiwandi",
+                                "Amravati",
+                                "Nanded-Waghala",
+                                "Sangli",
+                                "Malegaon"
+                            ]
+                        },
+                        {
+                            "state": "Telangana",
+                            "cities": [
+                                "Hyderabad",
+                                "Warangal",
+                                "Nizamabad",
+                                "Karimnagar",
+                                "Ramagundam",
+                                "Khammam",
+                                "Mahbubnagar",
+                                "Mancherial",
+                                "Adilabad",
+                                "Suryapet",
+                                "Jagtial",
+                                "Miryalaguda"
+                            ]
+                        },
+                        {
+                            "state": "Uttar Pradesh",
+                            "cities": [
+                                "Lucknow",
+                                "Kanpur",
+                                "Firozabad",
+                                "Agra",
+                                "Meerut",
+                                "Varanasi",
+                                "Allahabad",
+                                "Amroha",
+                                "Moradabad",
+                                "Aligarh",
+                                "Saharanpur",
+                                "Noida",
+                                "Loni",
+                                "Jhansi",
+                                "Shahjahanpur"
+                            ]
+                        },
+                        {
+                            "state": "Kerala",
+                            "cities": [
+                                "Thiruvananthapuram",
+                                "Kochi",
+                                "Kozhikode",
+                                "Kollam",
+                                "Thrissur",
+                                "Palakkad",
+                                "Alappuzha",
+                                "Malappuram",
+                                "Ponnani",
+                                "Vatakara",
+                                "Kanhangad",
+                                "Taliparamba",
+                                "Koyilandy",
+                                "Neyyattinkara",
+                                "Kayamkulam"
+                            ]
+                        },
+                        {
+                            "state": "Karnataka",
+                            "cities": [
+                                "Bengaluru",
+                                "Hubli-Dharwad",
+                                "Belagavi",
+                                "Mangaluru",
+                                "Davanagere",
+                                "Ballari",
+                                "Mysore",
+                                "Tumkur",
+                                "Shivamogga",
+                                "Raayachuru",
+                                "Robertson Pet",
+                                "Kolar",
+                                "Mandya",
+                                "Udupi"
+                            ]
+                        }
+                    ],
+                    "_id": "66f8d2e77b02a7ba8fdb9e10",
+                    "country": "India"
+                },
+                {
+                    "states": [
+                        {
+                            "state": "New York",
+                            "cities": [
+                                "Buffalo",
+                                "Rochester",
+                                "Yonkers",
+                                "Syracuse",
+                                "Albany",
+                                "New Rochelle",
+                                "Mount Vernon",
+                                "Schenectady",
+                                "Utica",
+                                "White Plains",
+                                "Hempstead",
+                                "Troy",
+                                "Niagara Falls"
+                            ]
+                        },
+                        {
+                            "state": "California",
+                            "cities": [
+                                "Los Angeles",
+                                "San Diego",
+                                "San Jose",
+                                "San Francisco",
+                                "Fresno",
+                                "Sacramento",
+                                "Long Beach",
+                                "Oakland",
+                                "Bakersfield",
+                                "Anaheim",
+                                "Santa Ana",
+                                "Riverside"
+                            ]
+                        },
+                        {
+                            "state": "Illinois",
+                            "cities": [
+                                "Chicago",
+                                "Aurora",
+                                "Rockford",
+                                "Joliet",
+                                "Naperville",
+                                "Springfield",
+                                "Peoria",
+                                "Elgin",
+                                "Waukegan",
+                                "Cicero",
+                                "Champaign",
+                                "Bloomington",
+                                "Arlington Heights",
+                                "Evanston",
+                                "Decatur"
+                            ]
+                        },
+                        {
+                            "state": "Texas",
+                            "cities": [
+                                "Houston",
+                                "San Antonio",
+                                "Dallas",
+                                "Austin",
+                                "Fort Worth",
+                                "El Paso",
+                                "Arlington",
+                                "Corpus Christi",
+                                "Plano",
+                                "Laredo",
+                                "Lubbock",
+                                "Garland",
+                                "Irving",
+                                "Amarillo"
+                            ]
+                        }
+                    ],
+                    "_id": "66f8d2e77b02a7ba8fdb9e11",
+                    "country": "USA"
+                }
+            ]
+        }
+    ]
+}

@@ -9,9 +9,10 @@ import {
   Flex,
   Box,
 } from "@chakra-ui/react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 
 const LoginForm = () => {
+  const navigate = useNavigate() 
   const [loginData, setLoginData] = useState({
     email: '',
     password: '',
@@ -40,8 +41,8 @@ const LoginForm = () => {
       }
       const result = await response.json()
       localStorage.setItem("jwtToken", result.token)
-      alert(`${loginData.userType.toLocaleLowerCase()} logged in Successfully`)
-      window.location.href = "/login"
+      //alert(`${loginData.userType.toLocaleLowerCase()} logged in Successfully`)
+      navigate("/dashBoard")
     }
     catch(er) {
       console.error('Error:', er)

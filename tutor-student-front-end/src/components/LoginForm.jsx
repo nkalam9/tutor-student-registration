@@ -9,11 +9,12 @@ import {
   Flex,
   Box,
 } from "@chakra-ui/react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 
 const LoginForm = () => {
+  const navigate = useNavigate() 
   const [loginData, setLoginData] = useState({
-    userId: '',
+    email: '',
     password: '',
     userType: 'Student',
   });
@@ -23,11 +24,30 @@ const LoginForm = () => {
     setLoginData({ ...loginData, [id]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic here
-    console.log('Login data:', loginData);
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await fetch(`http://localhost:4000/${loginData.userType.toLocaleLowerCase()}/login`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+      })
+
+      if(!response.ok) {
+        throw new Error("error logging in")
+      }
+      const result = await response.json()
+      localStorage.setItem("jwtToken", result.token)
+      //alert(`${loginData.userType.toLocaleLowerCase()} logged in Successfully`)
+      navigate("/dashBoard")
+    }
+    catch(er) {
+      console.error('Error:', er)
+    }
+  }
 
   return (
     <Flex
@@ -51,11 +71,11 @@ const LoginForm = () => {
             <h2>Login</h2>
 
             <FormControl>
-              <FormLabel htmlFor="userId">User/Email ID:</FormLabel>
+              <FormLabel htmlFor="email">User/Email ID:</FormLabel>
               <Input
                 type="text"
-                id="userId"
-                value={loginData.userId}
+                id="email"
+                value={loginData.email}
                 onChange={handleChange}
               />
             </FormControl>

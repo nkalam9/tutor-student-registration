@@ -11,76 +11,82 @@ import {
   Box,
   Heading,
   Icon,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 
+
+
 // Mock data from JSON files
-const getLocationData = {
-  location: [
-    {
-      _id: "66f789de2041c9e40d2c4d1a",
-      countryStateCity: [
-        {
-          states: [
-            {
-              state: "Andhra Pradesh",
-              cities: ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
-            },
-            {
-              state: "West Bengal",
-              cities: ["Kolkata", "Siliguri", "Asansol"],
-            },
-            {
-              state: "Maharashtra",
-              cities: ["Mumbai", "Pune", "Nagpur"],
-            },
-            {
-              state: "Telangana",
-              cities: ["Hyderabad", "Warangal", "Nizamabad"],
-            },
-            {
-              state: "Uttar Pradesh",
-              cities: ["Lucknow", "Kanpur", "Firozabad"],
-            },
-            {
-              state: "Kerala",
-              cities: ["Thiruvananthapuram", "Kochi", "Kozhikode"],
-            },
-            {
-              state: "Karnataka",
-              cities: ["Bengaluru", "Hubli-Dharwad", "Belagavi"],
-            },
-          ],
-          _id: "66f8d2e77b02a7ba8fdb9e10",
-          country: "India",
-        },
-        {
-          states: [
-            {
-              state: "New York",
-              cities: ["Buffalo", "Rochester", "Yonkers"],
-            },
-            {
-              state: "California",
-              cities: ["Los Angeles", "San Diego", "San Jose"],
-            },
-            {
-              state: "Illinois",
-              cities: ["Chicago", "Aurora", "Rockford"],
-            },
-            {
-              state: "Texas",
-              cities: ["Houston", "San Antonio", "Dallas"],
-            },
-          ],
-          _id: "66f8d2e77b02a7ba8fdb9e11",
-          country: "USA",
-        },
-      ],
-    },
-  ],
-};
+// const getLocationData = {
+//   location: [
+//     {
+//       _id: "66f789de2041c9e40d2c4d1a",
+//       countryStateCity: [
+//         {
+//           states: [
+//             {
+//               state: "Andhra Pradesh",
+//               cities: ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore"],
+//             },
+//             {
+//               state: "West Bengal",
+//               cities: ["Kolkata", "Siliguri", "Asansol"],
+//             },
+//             {
+//               state: "Maharashtra",
+//               cities: ["Mumbai", "Pune", "Nagpur"],
+//             },
+//             {
+//               state: "Telangana",
+//               cities: ["Hyderabad", "Warangal", "Nizamabad"],
+//             },
+//             {
+//               state: "Uttar Pradesh",
+//               cities: ["Lucknow", "Kanpur", "Firozabad"],
+//             },
+//             {
+//               state: "Kerala",
+//               cities: ["Thiruvananthapuram", "Kochi", "Kozhikode"],
+//             },
+//             {
+//               state: "Karnataka",
+//               cities: ["Bengaluru", "Hubli-Dharwad", "Belagavi"],
+//             },
+//           ],
+//           _id: "66f8d2e77b02a7ba8fdb9e10",
+//           country: "India",
+//         },
+//         {
+//           states: [
+//             {
+//               state: "New York",
+//               cities: ["Buffalo", "Rochester", "Yonkers"],
+//             },
+//             {
+//               state: "California",
+//               cities: ["Los Angeles", "San Diego", "San Jose"],
+//             },
+//             {
+//               state: "Illinois",
+//               cities: ["Chicago", "Aurora", "Rockford"],
+//             },
+//             {
+//               state: "Texas",
+//               cities: ["Houston", "San Antonio", "Dallas"],
+//             },
+//           ],
+//           _id: "66f8d2e77b02a7ba8fdb9e11",
+//           country: "USA",
+//         },
+//       ],
+//     },
+//   ],
+// };
 
 const RegistrationForm = () => {
+  const [locationDB, setlocationDB] = useState('');
+
+
   const initialFormData = {
     userType: "Student",
     name: "",
@@ -113,41 +119,51 @@ const RegistrationForm = () => {
   const [subjects, setSubjects] = useState([]);
 
   useEffect(() => {
-    const countriesData = getLocationData.location[0].countryStateCity.map(
-      (country) => country.country
-    );
-    setCountries(countriesData);
+    const fetchLocationData = async () => {
+      try {
+        const response = await fetch('http://localhost:4000/location/location');
+        const data = await response.json()
+        const countriesData = data.location[0].countryStateCity.map(
+          (country) => country.country
+        );
+        setCountries(countriesData);
 
-    const selectedCountry = getLocationData.location[0].countryStateCity.find(
-      (country) => country.country === formData.country
-    );
+        const selectedCountry = data.location[0].countryStateCity.find(
+          (country) => country.country === formData.country
+        );
 
-    if (selectedCountry) {
-      const statesData = selectedCountry.states.map((state) => state.state);
-      setStates(statesData);
+        if (selectedCountry) {
+          const statesData = selectedCountry.states.map((state) => state.state);
+          setStates(statesData);
 
-      const selectedState = selectedCountry.states.find(
-        (state) => state.state === formData.state
-      );
+          const selectedState = selectedCountry.states.find(
+            (state) => state.state === formData.state
+          );
 
-      if (selectedState) {
-        const citiesData = selectedState.cities;
-        setCities(citiesData);
-      } else {
-        setCities([]);
+          if (selectedState) {
+            const citiesData = selectedState.cities;
+            setCities(citiesData);
+          } else {
+            setCities([]);
+          }
+        } else {
+          setStates([]);
+          setCities([]);
+        }
+
+        const mockSubjects = [
+          { id: 1, name: "Mathematics" },
+          { id: 2, name: "Physics" },
+          { id: 3, name: "Chemistry" },
+          { id: 4, name: "Biology" },
+        ];
+        setSubjects(mockSubjects);
+      } catch (error) {
+        console.error("error fetching")
       }
-    } else {
-      setStates([]);
-      setCities([]);
     }
+    fetchLocationData()
 
-    const mockSubjects = [
-      { id: 1, name: "Mathematics" },
-      { id: 2, name: "Physics" },
-      { id: 3, name: "Chemistry" },
-      { id: 4, name: "Biology" },
-    ];
-    setSubjects(mockSubjects);
   }, [formData.country, formData.state]);
 
   const handleCountryChange = (e) => {
@@ -165,6 +181,75 @@ const RegistrationForm = () => {
       : formData.teachingSubjects.filter((subject) => subject !== value);
     setFormData({ ...formData, teachingSubjects: updatedSubjects });
   };
+
+  const formatData = (formData) => {
+    const baseData = {
+      name: formData.name,
+      DOB: formData.dob,
+      gender: formData.gender,
+      userId: formData.userId,
+      email: formData.contactDetails.email,
+      password: formData.password,
+      location: {
+        state: formData.state,
+        country: formData.country,
+        city: formData.city,
+      },
+      contactDetails: {
+        emailId: formData.contactDetails.email,
+        phoneNo: formData.contactDetails.phone,
+      },
+      address: {
+        buildingNo: formData.addressDetails.houseNo,
+        floor: formData.addressDetails.floor,
+        streetNo: formData.addressDetails.streetNo,
+        area: formData.addressDetails.area,
+        landMark: formData.addressDetails.landmark,
+        pinCode: formData.addressDetails.pinCode,
+      },
+    };
+    if (formData.userType === "Tutor") {
+      return {
+        ...baseData,
+        tutorPhoto: formData.tutorPhoto,
+        teachingSubjects: formData.teachingSubjects,
+      };
+    }
+
+    if(formData.userType === "Student") {
+      return {
+        ...baseData,
+        studentPhoto: "testing "
+      }
+    }
+
+    return baseData;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const dataToSend = formatData(formData)
+
+    try {
+      const response = await fetch(`http://localhost:4000/${formData.userType.toLocaleLowerCase()}/register`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+      })
+
+      if(!response.ok) {
+        throw new Error("error registering")
+      }
+      const result = await response.json()
+      alert(`${formData.userType.toLocaleLowerCase()} registered Successfully`)
+      window.location.href = "/login"
+    }
+    catch(er) {
+      console.error('Error:', er)
+    }
+  }
 
   return (
     <Box p="4" bg="white" boxShadow="md" borderRadius="md">
@@ -194,7 +279,7 @@ const RegistrationForm = () => {
       <Heading as="h1" size="lg" mb="6" textAlign="center">
         Registration Form
       </Heading>
-      <form>
+      <form onSubmit={handleSubmit}>
         <FormControl mb="4">
           <FormLabel htmlFor="userType">Register as:</FormLabel>
           <Select
@@ -458,7 +543,12 @@ const RegistrationForm = () => {
           Contact Details
         </Heading>
         <Stack spacing={4}>
-          <InputGroup>
+          <FormControl
+            isInvalid={
+              !/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(formData.contactDetails.email) &&
+              formData.contactDetails.email !== ''
+            }
+          >
             <FormLabel htmlFor="email">Email Id:</FormLabel>
             <Input
               type="email"
@@ -473,9 +563,16 @@ const RegistrationForm = () => {
                   },
                 })
               }
+              pattern="^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$"
             />
-          </InputGroup>
-          <InputGroup>
+            <FormErrorMessage>Invalid email address.</FormErrorMessage>
+          </FormControl>
+          <FormControl
+            isInvalid={
+              !/^\d{10}$/.test(formData.contactDetails.phone) &&
+              formData.contactDetails.phone !== ''
+            }
+          >
             <FormLabel htmlFor="phone">Phone No:</FormLabel>
             <Input
               type="tel"
@@ -490,8 +587,10 @@ const RegistrationForm = () => {
                   },
                 })
               }
+              pattern="^\d+$"
             />
-          </InputGroup>
+            <FormErrorMessage>Phone number must contain only digits.</FormErrorMessage>
+          </FormControl>
         </Stack>
 
         {formData.userType === "Tutor" && (
@@ -516,8 +615,28 @@ const RegistrationForm = () => {
             </CheckboxGroup>
           </>
         )}
+
+        <Box mt="6" textAlign="left" paddingBottom="2rem">
+          <button
+            type="submit"
+            onClick={() => ((e) => {
+              e.preventDefault()
+            })}
+            style={{
+              padding: "8px 16px",
+              backgroundColor: "#3182ce",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              marginLeft: "8px",
+            }}
+          >
+            Register
+          </button>
+        </Box>
       </form>
-      
+
     </Box>
   );
 };

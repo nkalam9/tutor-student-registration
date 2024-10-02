@@ -6,16 +6,15 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Flex,
   Box,
 } from "@chakra-ui/react";
-import { Link, useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode'
+import { useNavigate } from 'react-router-dom';
+import jwtDecode from 'jwt-decode';
 
 const Dashboard = () => {
-  const [user, setUserId] = useState("")
-  const [typeOfUser, setTypeOfUser] = useState("")
-  const [userData, setUserData] = useState("")
+  const [user, setUserId] = useState("");
+  const [typeOfUser, setTypeOfUser] = useState("");
+  const [userData, setUserData] = useState("");
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -62,28 +61,28 @@ const Dashboard = () => {
     }
   };
 
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     if (!localStorage.getItem('jwtToken')) {
-      navigate("/login")
+      navigate("/login");
     }
-    const token = localStorage.getItem('jwtToken')
+    const token = localStorage.getItem('jwtToken');
     if (token) {
-      const { userId, type } = jwtDecode(token)
-      console.log(userId, type)
-      setUserId(userId)
-      setTypeOfUser(type)
+      const { userId, type } = jwtDecode(token);
+      console.log(userId, type);
+      setUserId(userId);
+      setTypeOfUser(type);
       fetch(`http://localhost:4000/${type}/${userId}`)
-        .then(response => { return response.json() })
+        .then(response => response.json())
         .then(data => {
-          setFormData(data[type])
-          setUserData(data[type])
+          setFormData(data[type]);
+          setUserData(data[type]);
+          // Fetch location data based on the received formData
+          fetchLocationData(data[type].location.country, data[type].location.state);
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log(error));
     }
-
-  }, [])
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -103,76 +102,93 @@ const Dashboard = () => {
 
       const result = await response.json();
       console.log('Success:', result);
-      setFormData(result[typeOfUser])
+      setFormData(result[typeOfUser]);
       alert('User data updated successfully');
     } catch (error) {
       console.error('Error updating user data:', error);
       alert('Failed to update user data');
     }
-  }
+  };
 
-  useEffect(() => {
-    const fetchLocationData = async () => {
-      try {
-        const response = await fetch('http://localhost:4000/location/location');
-        const data = await response.json()
-        const countriesData = data.location[0].countryStateCity.map(
-          (country) => country.country
+  const fetchLocationData = async (country, state) => {
+    try {
+      const response = await fetch('http://localhost:4000/location/location');
+      const data = await response.json();
+      const countriesData = data.location[0].countryStateCity.map(
+        (country) => country.country
+      );
+      setCountries(countriesData);
+
+      const selectedCountry = data.location[0].countryStateCity.find(
+        (country) => country.country === country
+      );
+
+      if (selectedCountry) {
+        const statesData = selectedCountry.states.map((state) => state.state);
+        setStates(statesData);
+
+        const selectedState = selectedCountry.states.find(
+          (state) => state.state === state
         );
-        setCountries(countriesData);
 
-        const selectedCountry = data.location[0].countryStateCity.find(
-          (country) => country.country === formData.country
-        );
-
-        if (selectedCountry) {
-          const statesData = selectedCountry.states.map((state) => state.state);
-          setStates(statesData);
-
-          const selectedState = selectedCountry.states.find(
-            (state) => state.state === formData.state
-          );
-
-          if (selectedState) {
-            const citiesData = selectedState.cities;
-            setCities(citiesData);
-          } else {
-            setCities([]);
-          }
+        if (selectedState) {
+          const citiesData = selectedState.cities;
+          setCities(citiesData);
         } else {
-          setStates([]);
           setCities([]);
         }
-
-        const mockSubjects = [
-          { id: 1, name: "Mathematics" },
-          { id: 2, name: "Physics" },
-          { id: 3, name: "Chemistry" },
-          { id: 4, name: "Biology" },
-        ];
-        setSubjects(mockSubjects);
-      } catch (error) {
-        console.error("error fetching")
+      } else {
+        setStates([]);
+        setCities([]);
       }
-    }
-    fetchLocationData()
 
-  }, [formData.country, formData.state]);
+      const mockSubjects = [
+        { id: 1, name: "Mathematics" },
+        { id: 2, name: "Physics" },
+        { id: 3, name: "Chemistry" },
+        { id: 4, name: "Biology" },
+      ];
+      setSubjects(mockSubjects);
+    } catch (error) {
+      console.error("error fetching");
+    }
+  };
 
   const handleCountryChange = (e) => {
-    setFormData({ ...formData, country: e.target.value, state: "", city: "" });
+    setFormData({
+      ...formData,
+      location: {
+        ...formData.location,
+        country: e.target.value,
+        state: "",
+        city: ""
+      }
+    });
   };
 
   const handleStateChange = (e) => {
-    setFormData({ ...formData, state: e.target.value, city: "" });
+    setFormData({
+      ...formData,
+      location: {
+        ...formData.location,
+        state: e.target.value,
+        city: ""
+      }
+    });
+  };
+
+  const handleCityChange = (e) => {
+    setFormData({
+      ...formData,
+      location: {
+        ...formData.location,
+        city: e.target.value
+      }
+    });
   };
 
   return (
     <Box p="4" bg="white" boxShadow="md" borderRadius="md">
-      {/* <Flex as="nav" bg="blue.500" color="white" p="4" justifyContent="space-between" alignItems="center">
-        <Heading as="h1" size="lg">Dashboard</Heading>
-        <Button colorScheme="red" onClick={handleLogout}>Logout</Button>
-      </Flex> */}
       <h2>Dashboard</h2>
       {userData && (
         <form onSubmit={handleSubmit}>
@@ -227,65 +243,55 @@ const Dashboard = () => {
               />
             </FormControl>
 
-            {/* <FormControl>
-              <FormLabel htmlFor="password">Password:</FormLabel>
-              <Input
-                type="password"
-                id="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </FormControl> */}
+            <FormControl mb="4">
+              <FormLabel htmlFor="country">Country:</FormLabel>
+              <Select
+                id="country"
+                value={formData.location.country}
+                onChange={handleCountryChange}
+              >
+                <option value="">Select Country</option>
+                {countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
 
-<FormControl mb="4">
-          <FormLabel htmlFor="country">Country:</FormLabel>
-          <Select
-            id="country"
-            value={formData.country}
-            onChange={handleCountryChange}
-          >
-            <option value="">Select Country</option>
-            {countries.map((country) => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
+            <FormControl mb="4">
+              <FormLabel htmlFor="state">State:</FormLabel>
+              <Select
+                id="state"
+                value={formData.location.state}
+                onChange={handleStateChange}
+                disabled={!formData.location.country}
+              >
+                <option value="">Select State</option>
+                {states.map((state) => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
 
-        <FormControl mb="4">
-          <FormLabel htmlFor="state">State:</FormLabel>
-          <Select
-            id="state"
-            value={formData.state}
-            onChange={handleStateChange}
-            disabled={!formData.country}
-          >
-            <option value="">Select State</option>
-            {states.map((state) => (
-              <option key={state} value={state}>
-                {state}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl mb="4">
-          <FormLabel htmlFor="city">City:</FormLabel>
-          <Select
-            id="city"
-            value={formData.city}
-            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-            disabled={!formData.state}
-          >
-            <option value="">Select City</option>
-            {cities.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
+            <FormControl mb="4">
+              <FormLabel htmlFor="city">City:</FormLabel>
+              <Select
+                id="city"
+                value={formData.location.city}
+                onChange={handleCityChange}
+                disabled={!formData.location.state}
+              >
+                <option value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
 
             <FormControl>
               <FormLabel htmlFor="address.buildingNo">Building No:</FormLabel>

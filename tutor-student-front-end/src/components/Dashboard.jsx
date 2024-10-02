@@ -155,7 +155,8 @@ const Dashboard = () => {
   const [slotData, setSlotData] = useState({
     subject: "",
     tuitionDate: '',
-    tuitionTime: '',
+    tuitionTimeTo: '',
+    tuitionTimeFrom: '',
     tuitionFee: ''
   });
 
@@ -173,8 +174,8 @@ const Dashboard = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:4000/${typeOfUser}/${user}/slots`, {
-        method: 'POST',
+      const response = await fetch(`http://localhost:4000/${typeOfUser}/addSlots/${user}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -461,11 +462,20 @@ const Dashboard = () => {
               </FormControl>
 
               <FormControl>
-                <FormLabel htmlFor="tuitionTime">Tuition Time:</FormLabel>
+                <FormLabel htmlFor="tuitionTimeFrom">Tuition Time From:</FormLabel>
                 <Input
                   type="text"
-                  id="tuitionTime"
-                  value={slotData.tuitionTime}
+                  id="tuitionTimeFrom"
+                  value={slotData.tuitionTimeFrom}
+                  onChange={handleSlotChange}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel htmlFor="tuitionTimeTo">Tuition Time To:</FormLabel>
+                <Input
+                  type="text"
+                  id="tuitionTimeTo"
+                  value={slotData.tuitionTimeTo}
                   onChange={handleSlotChange}
                 />
               </FormControl>

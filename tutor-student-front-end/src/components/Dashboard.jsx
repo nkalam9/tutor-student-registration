@@ -9,7 +9,8 @@ import {
   Box,
 } from "@chakra-ui/react";
 import { useNavigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+import LogoutButton from './LogoutButton';
 
 const Dashboard = () => {
   const [user, setUserId] = useState("");
@@ -42,7 +43,8 @@ const Dashboard = () => {
     contactDetails: {
       emailId: '',
       phoneNo: ''
-    }
+    },
+    teachingSubjects: []
   });
 
   const handleChange = (e) => {
@@ -78,7 +80,6 @@ const Dashboard = () => {
           setFormData(data[type]);
           setUserData(data[type]);
           // Fetch location data based on the received formData
-          fetchLocationData(data[type].location.country, data[type].location.state);
         })
         .catch(error => console.log(error));
     }
@@ -142,18 +143,56 @@ const Dashboard = () => {
         setCities([]);
       }
 
-      const mockSubjects = [
-        { id: 1, name: "Mathematics" },
-        { id: 2, name: "Physics" },
-        { id: 3, name: "Chemistry" },
-        { id: 4, name: "Biology" },
-      ];
-      setSubjects(mockSubjects);
     } catch (error) {
       console.error("error fetching");
     }
   };
 
+  useEffect(() => {
+    fetchLocationData(formData.location.country, formData.location.state)
+  }, [formData.location.country, formData.location.state, formData.location.city])
+
+  const [slotData, setSlotData] = useState({
+    subject: "",
+    tuitionDate: '',
+    tuitionTime: '',
+    tuitionFee: ''
+  });
+
+  const handleSlotChange = (e) => {
+    const { id, value } = e.target;
+    setSlotData({ ...slotData, [id]: value });
+  };
+
+  const handleTeachingSubjectChange = (e) => {
+    const { value } = e.target;
+    setFormData({ ...formData, teachingSubjects: value.split(',').map(subject => subject.trim()) });
+  };
+
+  const handleSlotSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`http://localhost:4000/${typeOfUser}/${user}/slots`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(slotData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const result = await response.json();
+      console.log('Success:', result);
+      alert('Slot added successfully');
+    } catch (error) {
+      console.error('Error adding slot:', error);
+      alert('Failed to add slot');
+    }
+  };
   const handleCountryChange = (e) => {
     setFormData({
       ...formData,
@@ -247,7 +286,7 @@ const Dashboard = () => {
               <FormLabel htmlFor="country">Country:</FormLabel>
               <Select
                 id="country"
-                value={formData.location.country}
+                placeholder={formData.location.country}
                 onChange={handleCountryChange}
               >
                 <option value="">Select Country</option>
@@ -263,7 +302,7 @@ const Dashboard = () => {
               <FormLabel htmlFor="state">State:</FormLabel>
               <Select
                 id="state"
-                value={formData.location.state}
+                placeholder={formData.location.state}
                 onChange={handleStateChange}
                 disabled={!formData.location.country}
               >
@@ -280,7 +319,7 @@ const Dashboard = () => {
               <FormLabel htmlFor="city">City:</FormLabel>
               <Select
                 id="city"
-                value={formData.location.city}
+                placeholder={formData.location.city}
                 onChange={handleCityChange}
                 disabled={!formData.location.state}
               >
@@ -372,12 +411,85 @@ const Dashboard = () => {
                 onChange={handleChange}
               />
             </FormControl>
+            {typeOfUser !== "student" && (<FormControl>
+              <FormLabel htmlFor="teachingSubject">Teaching Subjects:</FormLabel>
+              <Input
+                type="text"
+                id="teachingSubject"
+                value={formData.teachingSubjects.join(', ')}
+                onChange={handleTeachingSubjectChange}
+              />
+            </FormControl>)}
+
 
             <Button type="submit" colorScheme="blue">Save Changes</Button>
           </Stack>
         </form>
       )}
+
+      {
+        typeOfUser !== "student" &&
+        <Box mt="8">
+          <h2>Add Tuition Slot</h2>
+          <form onSubmit={handleSlotSubmit}>
+            <Stack spacing={3}>
+              <FormControl>
+                <FormLabel htmlFor="subject">Subject:</FormLabel>
+                <Select
+                  id="subject"
+                  value={slotData.subject}
+                  onChange={handleSlotChange}
+                >
+                  {console.log(formData)}
+                  <option value="">Select Subject</option>
+                  {formData.teachingSubjects.map((subject) => (
+                    <option key={subject} value={subject}>
+                      {subject}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="tuitionDate">Tuition Date:</FormLabel>
+                <Input
+                  type="date"
+                  id="tuitionDate"
+                  value={slotData.tuitionDate}
+                  onChange={handleSlotChange}
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="tuitionTime">Tuition Time:</FormLabel>
+                <Input
+                  type="text"
+                  id="tuitionTime"
+                  value={slotData.tuitionTime}
+                  onChange={handleSlotChange}
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel htmlFor="tuitionFee">Tuition Fee:</FormLabel>
+                <Input
+                  type="number"
+                  id="tuitionFee"
+                  value={slotData.tuitionFee}
+                  onChange={handleSlotChange}
+                />
+              </FormControl>
+
+              <Button type="submit" colorScheme="blue">Add Slot</Button>
+            </Stack>
+          </form>
+        </Box>
+      }
+
+      <LogoutButton />
     </Box>
+
+
   );
 };
 

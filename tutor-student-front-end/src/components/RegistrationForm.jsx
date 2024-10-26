@@ -252,7 +252,7 @@ const RegistrationForm = () => {
   }
 
   return (
-    <Box p="4" bg="white" boxShadow="md" borderRadius="md">
+    <Box p="4" bg="white" boxShadow="md" borderRadius="md"ck>
       <Box mt="6" textAlign="left" paddingBottom="2rem">
         <Icon viewBox="0 0 24 24" boxSize={6} color="blue.500">
           <path

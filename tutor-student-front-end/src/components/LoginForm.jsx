@@ -42,7 +42,13 @@ const LoginForm = () => {
       const result = await response.json()
       localStorage.setItem("jwtToken", result.token)
       //alert(`${loginData.userType.toLocaleLowerCase()} logged in Successfully`)
-      navigate("/dashBoard")
+      console.log(loginData.userType.toLocaleLowerCase())
+      if(loginData.userType.toLocaleLowerCase()==="student"){
+        navigate("/studenthomescreen")
+      }
+      else{
+      navigate("/homeScreen")
+      }
     }
     catch(er) {
       console.error('Error:', er)

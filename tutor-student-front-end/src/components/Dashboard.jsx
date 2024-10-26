@@ -428,7 +428,7 @@ const Dashboard = () => {
         </form>
       )}
 
-      {
+      {/* {
         typeOfUser !== "student" &&
         <Box mt="8">
           <h2>Add Tuition Slot</h2>
@@ -494,7 +494,7 @@ const Dashboard = () => {
             </Stack>
           </form>
         </Box>
-      }
+      } */}
 
       <LogoutButton />
     </Box>

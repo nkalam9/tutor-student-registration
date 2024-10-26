@@ -12,7 +12,7 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button marginTop={"2rem"} onClick={handleLogout} >
+    <Button onClick={handleLogout} >
       Logout
     </Button>
   );
